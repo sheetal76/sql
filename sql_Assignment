@@ -1,0 +1,72 @@
+-- order  by, group by, group concat
+
+use basic_sql
+show tables
+
+create table  orders(
+cust_id int,
+order_id int,
+cust_name varchar(30),
+country varchar(20),
+state varchar(20)
+);
+
+select * from orders
+
+INSERT into orders values(01, 5, 'seema', 'India', 'karnataka')
+INSERT into orders values(02, 3, 'sanya', 'USA', 'seattle')
+INSERT into orders values(03, 4, 'sharanu', 'India', 'karnataka')
+INSERT into orders values(04, 2, 'sheetal', 'India', 'karnataka')
+INSERT into orders values(05, 3, 'shreya', 'china', 'Wuhan')
+INSERT into orders values(06, 1, 'neha', 'India', 'karnataka')
+
+-- Multilevel grouping;
+
+select
+country,
+state,
+count(*) as state_wise_orders
+from orders
+group by country, state
+order by country
+
+-- having condition used with only groupby
+
+select 
+country,
+state,
+count(*) as state_wise_orders
+from orders
+group by country, state
+having count(*)=1
+order by country
+
+select
+country,
+count(*) as country_wise_orders
+from orders
+group by country
+
+-- group concat
+select 
+country,
+group_concat( state order by state desc separator '_') as state_wise_data,
+count(*) as state_wise_orders
+from orders
+group by country
+
+create table students_marks(
+stu_id int,
+stu_name varchar(30),
+total_marks int
+);
+
+insert into students_marks values(01, 'sheetal', 85), (02, 'neha',65),(03, 'sharanu', 80), (04, 'shankar', 95),(05,'asha', 60)
+
+select *,
+case when total_marks>=95 then 'A+'
+     when total_marks>=85 and total_marks<90 then 'A'
+	 when total_marks>=75 and total_marks<85 then 'B+'
+	 when total_marks>=60 and total_marks<75 then 'B'
+     else 'C' end as grade
+from students_marks
